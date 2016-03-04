@@ -1,14 +1,11 @@
 /**
- * Request Dispatcher Handler
+ * return specfied JSON object
  */
-function DispatcherHandler() {
+var out = function(succ, data) {
+	return {message: succ ? 'success' : 'fail', success: !!succ, data: data || {}};
+};
 
-	/**
-	 * return specfied JSON object
-	 */
-	var out = function(succ, data) {
-		return {message: succ ? 'success' : 'fail', success: !!succ, data: data || {}};
-	};
+function Dispatcher() {
 
 	this.__unexpect = function(req) {
 		console.log('this is the unexpected request: ' + req.url);
@@ -19,6 +16,15 @@ function DispatcherHandler() {
 		console.log('this is the default request: /');
 		return out(true, {url: '/', params: req.params});
 	};
+
+}
+
+/**
+ * Request Dispatcher Handler
+ */
+function DispatcherHandler() {
+
+	Dispatcher.apply(this);
 
 	this.test = function(req) {
 		console.log('this is the request: /test');
@@ -45,6 +51,13 @@ function DispatcherHandler() {
 				console.log('this is the request: /user/jacky/age');
 				return {html: 'Age: 23'};
 			}
+		}
+	};
+
+	this.item = {
+		get: function(req) {
+			console.log('this is the request: /item/get');
+			return out(true, {url: '/item/get', params: req.params, now: new Date().toString()});
 		}
 	};
 
